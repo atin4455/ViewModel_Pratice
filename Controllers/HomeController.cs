@@ -15,29 +15,6 @@ namespace ViewModel_Pratice.Controllers
             IsAdmin = false,
         };
 
-        public IActionResult Index()
-        {
-            // 模擬從資料庫或服務取得的「領域資料」——實務上常與畫面需求不同。
-            var rawTodosFromDb = new[]
-            {
-                new { Id = 1, Title = "買牛奶", IsDone = false },
-                new { Id = 2, Title = "寫 ViewModel 範例", IsDone = true },
-            };
-
-            // ViewModel：把資料「整理成畫面要的樣子」再交給 View。
-            var vm = new DashboardViewModel
-            {
-                PageTitle = "首頁儀表板",
-                Greeting = $"你好，今天是 {DateTime.Today:yyyy-MM-dd}",
-                TodoTitles = rawTodosFromDb //資料庫來的資料
-                    .Where(t => !t.IsDone) //找出IsDone為false的資料
-                    .Select(t => t.Title) //只取出Title欄位
-                    .ToList(),  //轉成List<string>
-            };
-
-            return View(vm);
-        }
-
         [HttpGet]
         public IActionResult BindingDemo()
         {
@@ -72,11 +49,6 @@ namespace ViewModel_Pratice.Controllers
 
             TempData["GoodResult"] = $"[安全綁定] 已更新：Name={_fakeUser.Name}, Email={_fakeUser.Email}, IsAdmin={_fakeUser.IsAdmin}";
             return RedirectToAction(nameof(BindingDemo));
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
