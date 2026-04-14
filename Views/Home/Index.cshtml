@@ -1,8 +1,30 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model ViewModel_Pratice.Models.DashboardViewModel
+@{
+    ViewData["Title"] = Model.PageTitle;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mb-4">
+    <h1 class="display-5">@Model.PageTitle</h1>
+    <p class="lead">@Model.Greeting</p>
+</div>
+
+<div class="container" style="max-width: 28rem;">
+    <h2 class="h5">未完成待辦（@Model.TodoCount 筆）</h2>
+    @if (Model.TodoTitles.Count == 0)
+    {
+        <p class="text-muted">目前沒有未完成項目。</p>
+    }
+    else
+    {
+        <ul class="list-group">
+            @foreach (var title in Model.TodoTitles)
+            {
+                <li class="list-group-item">@title</li>
+            }
+        </ul>
+    }
+</div>
+
+<div class="text-center mt-4">
+    <a class="btn btn-outline-primary" asp-action="BindingDemo">看 Over-Posting 示範</a>
 </div>

@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Over-Posting 示範";
+    var user = ViewBag.CurrentUser as ViewModel_Pratice.Models.UserEntity;
+}
+
+<h1 class="mb-3">Over-Posting（Mass Assignment）示範</h1>
+<p class="text-muted">
+    這頁有兩個 POST：左邊直接綁定 Entity（危險），右邊綁定 ViewModel（安全）。
+</p>
+
+@if (TempData["BadResult"] is string bad)
+{
+    <div class="alert alert-warning">@bad</div>
+}
+
+@if (TempData["GoodResult"] is string good)
+{
+    <div class="alert alert-success">@good</div>
+}
+
+<div class="mb-4">
+    <h2 class="h5">目前「資料庫」資料</h2>
+    <ul>
+        <li>Id: @user?.Id</li>
+        <li>Name: @user?.Name</li>
+        <li>Email: @user?.Email</li>
+        <li>IsAdmin: @user?.IsAdmin</li>
+    </ul>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <h3 class="h5 text-danger">危險：直接綁定 Entity</h3>
+        <form asp-action="UpdateBad" method="post">
+            <input type="hidden" name="Id" value="@user?.Id" />
+            <div class="mb-2">
+                <label class="form-label">Name</label>
+                <input class="form-control" name="Name" value="@user?.Name" />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Email</label>
+                <input class="form-control" name="Email" value="@user?.Email" />
+            </div>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="badIsAdmin" name="IsAdmin" value="true" />
+                <input type="hidden" name="IsAdmin" value="false" />
+                <label class="form-check-label" for="badIsAdmin">IsAdmin（模擬不該被綁定的敏感欄位）</label>
+            </div>
+            <p class="small text-muted">
+                這裡故意放入敏感欄位，勾選後送出可觀察 over-posting 風險。
+            </p>
+            <button class="btn btn-danger" type="submit">送出危險綁定</button>
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <h3 class="h5 text-success">安全：只綁定 ViewModel</h3>
+        <form asp-action="UpdateGood" method="post">
+            <input type="hidden" name="Id" value="@user?.Id" />
+            <div class="mb-2">
+                <label class="form-label">Name</label>
+                <input class="form-control" name="Name" value="@user?.Name" />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Email</label>
+                <input class="form-control" name="Email" value="@user?.Email" />
+            </div>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="goodIsAdmin" name="IsAdmin" value="true" />
+                <input type="hidden" name="IsAdmin" value="false" />
+                <label class="form-check-label" for="goodIsAdmin">IsAdmin（即使勾選也會被忽略）</label>
+            </div>
+            <button class="btn btn-success" type="submit">送出安全綁定</button>
+        </form>
+    </div>
+</div>
